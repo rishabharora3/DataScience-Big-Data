@@ -1,0 +1,24 @@
+{viewName:'Participated_G', initialCollection:'S1_Participated', pipeline:
+
+	[{$unionWith: {
+		coll: 'S2_Participated',
+		pipeline: []
+	   }}, {$unionWith: {
+		coll: 'S3_Participated',
+		pipeline: []
+	   }}, {$group: {
+		_id: {
+		 mid: '$mid',
+		 pid: '$pid'
+		},
+		name: {
+		 $max: '$name'
+		},
+		ptitle: {
+		 $max: '$ptitle'
+		},
+		roles: {
+		 $push: '$role'
+		}
+	   }}]
+}

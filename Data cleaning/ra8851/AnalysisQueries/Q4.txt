@@ -1,0 +1,82 @@
+SELECT ROUND(MIN(v.rating),2) AS minimum, ROUND(MAX(v.rating),2) AS maximum, ROUND(m.median,2) AS median,
+ROUND(q_one.qone,2) AS qone, ROUND(q_three.qthree,2) AS qthree
+FROM @@View@@ AS v JOIN 
+(
+	SELECT Y.YK + Z.alpha * (X.YKPO - Y.YK) AS median
+	FROM (
+		SELECT rating AS YKPO 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.5*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@) + 1
+	) AS X JOIN(
+		SELECT rating AS YK 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.5*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@
+            )
+	) AS Y JOIN(
+		SELECT A.J-B.K AS alpha
+		FROM (
+			SELECT ROUND((0.5 * (COUNT(*) + 1)),0) AS J
+			FROM @@View@@
+		) AS A JOIN(
+			SELECT TRUNCATE(0.5*(COUNT(*) + 1),0) AS K
+			FROM @@View@@
+		) AS B
+	) AS Z
+) AS m JOIN 
+(
+	SELECT Y.YK + Z.alpha * (X.YKPO - Y.YK) AS qone
+	FROM (
+		SELECT rating AS YKPO 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.25*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@) + 1
+	) AS X JOIN(
+		SELECT rating AS YK 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.25*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@
+            )
+	) AS Y JOIN(
+		SELECT A.J-B.K AS alpha
+		FROM (
+			SELECT ROUND((0.25 * (COUNT(*) + 1)),0) AS J
+			FROM @@View@@
+		) AS A JOIN(
+			SELECT TRUNCATE(0.25*(COUNT(*) + 1),0) AS K
+			FROM @@View@@
+		) AS B
+	) AS Z
+) AS q_one JOIN
+(
+	SELECT Y.YK + Z.alpha * (X.YKPO - Y.YK) AS qthree
+	FROM (
+		SELECT rating AS YKPO 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.75*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@) + 1
+	) AS X JOIN(
+		SELECT rating AS YK 
+		FROM @@View@@
+		WHERE position = (
+			SELECT TRUNCATE((0.75*(COUNT(*) + 1)),0) AS K
+			FROM @@View@@
+            )
+	) AS Y JOIN(
+		SELECT A.J-B.K AS alpha
+		FROM (
+			SELECT ROUND((0.75 * (COUNT(*) + 1)),0) AS J
+			FROM @@View@@
+		) AS A JOIN(
+			SELECT TRUNCATE(0.75*(COUNT(*) + 1),0) AS K
+			FROM @@View@@
+		) AS B
+	) AS Z
+) AS q_three
+GROUP BY median,qone,qthree

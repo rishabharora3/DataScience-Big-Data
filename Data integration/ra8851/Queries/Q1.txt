@@ -1,0 +1,7 @@
+SELECT prg.name AS name, COUNT(prg.ptitle) AS cnt
+FROM Participated_G AS prg JOIN Movie_G AS m ON prg.ptitle = m.ptitle
+JOIN Person_G AS p ON prg.name = p.name
+WHERE year BETWEEN 1985 AND 1993 AND (alive IS NULL OR alive = 1) AND 
+(roles LIKE '%Producer%' OR roles LIKE '%Director%')
+GROUP BY prg.name
+HAVING cnt > 2

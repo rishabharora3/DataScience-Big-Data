@@ -1,0 +1,2 @@
+r(deptid, name, userid)
+r(deptid, deptname)

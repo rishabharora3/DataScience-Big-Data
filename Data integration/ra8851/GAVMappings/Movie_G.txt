@@ -1,0 +1,17 @@
+CREATE VIEW Movie_G AS
+SELECT MAX(ptitle) AS ptitle, MAX(year) AS year, 
+MAX(rating) AS rating, MAX(totalvotes) AS totalvotes, 
+GROUP_CONCAT(genre) AS genres FROM 
+(
+SELECT id, ptitle, year, rating, NULL AS totalvotes, 
+'Comedy' AS genre
+FROM S1_Movie 
+UNION 
+SELECT id, ptitle, year, NULL AS rating, totalvotes, 
+'Action' AS genre
+FROM S2_Movie
+UNION
+SELECT id, ptitle, NULL AS year, NULL AS rating, NULL AS totalvotes, 
+NULL AS genre
+FROM S3_Movie
+) AS x GROUP BY id

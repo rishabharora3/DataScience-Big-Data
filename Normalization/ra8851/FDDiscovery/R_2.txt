@@ -1,0 +1,9 @@
+movieid -> adult
+movieid -> title
+title -> year
+genre -> genreid
+genreid -> genre
+movieid -> year
+title -> adult
+title -> runtime
+movieid -> runtime

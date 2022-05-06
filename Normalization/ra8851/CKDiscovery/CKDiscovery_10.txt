@@ -1,0 +1,2 @@
+genreid, movieid
+genre, movieid

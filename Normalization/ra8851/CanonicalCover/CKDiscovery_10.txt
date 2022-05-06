@@ -1,0 +1,7 @@
+genreid -> genre
+runtime, title -> year
+title -> isadult
+genre, title -> runtime
+genreid, title -> runtime
+genre -> genreid
+movieid -> runtime, title

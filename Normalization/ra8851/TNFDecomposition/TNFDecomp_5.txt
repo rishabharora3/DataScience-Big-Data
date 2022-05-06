@@ -1,0 +1,4 @@
+r(B, F)
+r(A, B)
+r(A, C, D)
+r(B, D, E)

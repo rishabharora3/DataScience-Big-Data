@@ -1,0 +1,6 @@
+SELECT totalvotes
+FROM Participated_G AS pg JOIN Movie_G AS m
+ON m.ptitle = pg.ptitle
+WHERE (lower(name) LIKE 'lee%')
+AND genres = 'Action'
+AND totalvotes is not NULL

@@ -1,0 +1,85 @@
+{initialCollection:'@@Relation@@', pipeline:[{$sort: {
+    attribute: 1
+   }}, {$group: {
+    _id: null,
+    array: {
+     $push: '$attribute'
+    }
+   }}, {$project: {
+    K: {
+     $trunc: {
+      $multiply: [
+       @@p@@,
+       {
+        $add: [
+         1,
+         {
+          $size: '$array'
+         }
+        ]
+       }
+      ]
+     }
+    },
+    array: 1
+   }}, {$project: {
+    alpha: {
+     $subtract: [
+      {
+       $round: {
+        $multiply: [
+         @@p@@,
+         {
+          $add: [
+           1,
+           {
+            $size: '$array'
+           }
+          ]
+         }
+        ]
+       }
+      },
+      '$K'
+     ]
+    },
+    array: 1,
+    K: 1
+   }}, {$project: {
+    yk: {
+     $arrayElemAt: [
+      '$array',
+      '$K'
+     ]
+    },
+    ykpo: {
+     $arrayElemAt: [
+      '$array',
+      {
+       $add: [
+        1,
+        '$K'
+       ]
+      }
+     ]
+    },
+    alpha: 1
+   }}, {$project: {
+    attribute: {
+     $add: [
+      '$yk',
+      {
+       $multiply: [
+        '$alpha',
+        {
+         $subtract: [
+          '$ykpo',
+          '$yk'
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    _id: 0
+   }}]}

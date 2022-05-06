@@ -1,0 +1,266 @@
+{initialCollection:'Movies', pipeline:[{$match: {
+    genres: '@@Genre@@',
+    year: {
+     $lte: @@EndYear@@,
+     $gte: @@InitYear@@
+    }
+   }}, {$sort: {
+    rating: 1
+   }}, {$group: {
+    _id: null,
+    array: {
+     $push: '$rating'
+    }
+   }}, {$project: {
+    K: {
+     $trunc: {
+      $multiply: [
+       0.5,
+       {
+        $add: [
+         1,
+         {
+          $size: '$array'
+         }
+        ]
+       }
+      ]
+     }
+    },
+    array: 1
+   }}, {$project: {
+    alpha: {
+     $subtract: [
+      {
+       $round: {
+        $multiply: [
+         0.5,
+         {
+          $add: [
+           1,
+           {
+            $size: '$array'
+           }
+          ]
+         }
+        ]
+       }
+      },
+      '$K'
+     ]
+    },
+    array: 1,
+    K: 1
+   }}, {$project: {
+    yk: {
+     $arrayElemAt: [
+      '$array',
+      '$K'
+     ]
+    },
+    ykpo: {
+     $arrayElemAt: [
+      '$array',
+      {
+       $add: [
+        1,
+        '$K'
+       ]
+      }
+     ]
+    },
+    alpha: 1,
+    array: 1
+   }}, {$project: {
+    median: {
+     $add: [
+      '$yk',
+      {
+       $multiply: [
+        '$alpha',
+        {
+         $subtract: [
+          '$ykpo',
+          '$yk'
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    _id: 0,
+    array: 1
+   }}, {$project: {
+    K: {
+     $trunc: {
+      $multiply: [
+       0.25,
+       {
+        $add: [
+         1,
+         {
+          $size: '$array'
+         }
+        ]
+       }
+      ]
+     }
+    },
+    array: 1,
+    median: 1
+   }}, {$project: {
+    alpha: {
+     $subtract: [
+      {
+       $round: {
+        $multiply: [
+         0.25,
+         {
+          $add: [
+           1,
+           {
+            $size: '$array'
+           }
+          ]
+         }
+        ]
+       }
+      },
+      '$K'
+     ]
+    },
+    array: 1,
+    K: 1,
+    median: 1
+   }}, {$project: {
+    yk: {
+     $arrayElemAt: [
+      '$array',
+      '$K'
+     ]
+    },
+    ykpo: {
+     $arrayElemAt: [
+      '$array',
+      {
+       $add: [
+        1,
+        '$K'
+       ]
+      }
+     ]
+    },
+    alpha: 1,
+    array: 1,
+    median: 1
+   }}, {$project: {
+    qone: {
+     $add: [
+      '$yk',
+      {
+       $multiply: [
+        '$alpha',
+        {
+         $subtract: [
+          '$ykpo',
+          '$yk'
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    array: 1,
+    median: 1
+   }}, {$project: {
+    K: {
+     $trunc: {
+      $multiply: [
+       0.75,
+       {
+        $add: [
+         1,
+         {
+          $size: '$array'
+         }
+        ]
+       }
+      ]
+     }
+    },
+    array: 1,
+    median: 1,
+    qone: 1
+   }}, {$project: {
+    alpha: {
+     $subtract: [
+      {
+       $round: {
+        $multiply: [
+         0.75,
+         {
+          $add: [
+           1,
+           {
+            $size: '$array'
+           }
+          ]
+         }
+        ]
+       }
+      },
+      '$K'
+     ]
+    },
+    array: 1,
+    K: 1,
+    median: 1,
+    qone: 1
+   }}, {$project: {
+    yk: {
+     $arrayElemAt: [
+      '$array',
+      '$K'
+     ]
+    },
+    ykpo: {
+     $arrayElemAt: [
+      '$array',
+      {
+       $add: [
+        1,
+        '$K'
+       ]
+      }
+     ]
+    },
+    alpha: 1,
+    array: 1,
+    median: 1,
+    qone: 1
+   }}, {$project: {
+    qthree: {
+     $add: [
+      '$yk',
+      {
+       $multiply: [
+        '$alpha',
+        {
+         $subtract: [
+          '$ykpo',
+          '$yk'
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    median: 1,
+    qone: 1,
+    maximum: {
+     $max: '$array'
+    },
+    minimum: {
+     $min: '$array'
+    }
+   }}]}

@@ -1,0 +1,61 @@
+{initialCollection:'Movies', pipeline:[{$match: {
+ genres: 'Romance'
+}}, {$lookup: {
+ from: 'MoviesDenorm',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'romanceMovies'
+}}, {$unwind: {
+ path: '$romanceMovies'
+}}, {$unwind: {
+ path: '$romanceMovies.writers'
+}}, {$group: {
+ _id: '$romanceMovies.writers',
+ romcount: {
+  $sum: 1
+ }
+}}, {$match: {
+ romcount: {
+  $gt: 15
+ }
+}}, {$lookup: {
+ from: 'People',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'isAlive'
+}}, {$unwind: {
+ path: '$isAlive'
+}}, {$match: {
+ 'isAlive.dyear': {
+  $exists: false
+ }
+}}, {$lookup: {
+ from: 'PeopleDenorm',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'getDirected'
+}}, {$unwind: {
+ path: '$getDirected'
+}}, {$unwind: {
+ path: '$getDirected.directed'
+}}, {$lookup: {
+ from: 'Movies',
+ localField: 'getDirected.directed',
+ foreignField: '_id',
+ as: 'directedMovies'
+}}, {$unwind: {
+ path: '$directedMovies'
+}}, {$match: {
+ 'directedMovies.genres': 'Sci-Fi'
+}}, {$group: {
+ _id: '$_id',
+ countDirected: {
+  $sum: 1
+ }
+}}, {$match: {
+ countDirected: {
+  $gte: 2
+ }
+}}, {$project: {
+ _id: 1
+}}]}

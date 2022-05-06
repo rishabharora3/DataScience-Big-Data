@@ -1,0 +1,41 @@
+{viewName:'Movie_G', initialCollection:'S1_Movie', pipeline:
+
+    [{$project: {
+        ptitle: 1,
+        year: 1,
+        rating: 1,
+        genre: 'Comedy'
+       }}, {$unionWith: {
+        coll: 'S2_Movie',
+        pipeline: [
+         {
+          $project: {
+           ptitle: 1,
+           year: 1,
+           totalvotes: 1,
+           genre: 'Action'
+          }
+         }
+        ]
+       }}, {$unionWith: {
+        coll: 'S3_Movie',
+        pipeline: []
+       }}, {$group: {
+        _id: '$_id',
+        ptitle: {
+         $max: '$ptitle'
+        },
+        year: {
+         $max: '$year'
+        },
+        rating: {
+         $max: 'rating'
+        },
+        totalvotes: {
+         $max: '$totalvotes'
+        },
+        genres: {
+         $push: '$genre'
+        }
+       }}]
+}

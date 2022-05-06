@@ -1,0 +1,2 @@
+r(author, isbn, publisher, title)
+r(accessionno, isbn)

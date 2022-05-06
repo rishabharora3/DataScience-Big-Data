@@ -1,0 +1,24 @@
+SELECT Y.YK + Z.alpha * (X.YKPO - Y.YK) AS attribute
+	FROM (
+		SELECT attribute AS YKPO 
+		FROM @@Relation@@
+		WHERE position = (
+			SELECT TRUNCATE((@@p@@ *(COUNT(*) + 1)),0) AS K
+			FROM @@Relation@@) + 1
+	) AS X JOIN(
+		SELECT attribute AS YK 
+		FROM @@Relation@@
+		WHERE position = (
+			SELECT TRUNCATE((@@p@@ *(COUNT(*) + 1)),0) AS K
+			FROM @@Relation@@
+            )
+	) AS Y JOIN(
+		SELECT A.J-B.K AS alpha
+		FROM (
+			SELECT ROUND((@@p@@ * (COUNT(*) + 1)),0) AS J
+			FROM @@Relation@@
+		) AS A JOIN(
+			SELECT TRUNCATE(@@p@@ *(COUNT(*) + 1),0) AS K
+			FROM @@Relation@@
+		) AS B
+	) AS Z

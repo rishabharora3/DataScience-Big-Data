@@ -1,0 +1,53 @@
+{initialCollection:'Movies', pipeline:[{$match: {
+ genres: 'Western'
+}}, {$match: {
+ totalvotes: {
+  $gt: 10000
+ }
+}}, {$lookup: {
+ from: 'MoviesDenorm',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'movieProducer'
+}}, {$unwind: {
+ path: '$movieProducer'
+}}, {$unwind: {
+ path: '$movieProducer.producers'
+}}, {$lookup: {
+ from: 'People',
+ localField: 'movieProducer.producers',
+ foreignField: '_id',
+ as: 'producerisAlive'
+}}, {$unwind: {
+ path: '$producerisAlive'
+}}, {$match: {
+ 'producerisAlive.dyear': {
+  $exists: false
+ }
+}}, {$lookup: {
+ from: 'PeopleDenorm',
+ localField: 'producerisAlive._id',
+ foreignField: '_id',
+ as: 'isActor'
+}}, {$unwind: {
+ path: '$isActor'
+}}, {$match: {
+ 'isActor.acted': {
+  $exists: true
+ }
+}}, {$group: {
+ _id: {
+  _id: '$_id',
+  rating: '$rating'
+ },
+ prodcount: {
+  $sum: 1
+ }
+}}, {$match: {
+ prodcount: {
+  $gte: 2
+ }
+}}, {$project: {
+ _id: '$_id._id',
+ rating: '$_id.rating'
+}}]}

@@ -1,0 +1,18 @@
+{viewName:'S2_Participated', initialCollection:'S2_Producer', pipeline:
+    [{$lookup: {
+        from: 'S2_Movie',
+        localField: 'produced',
+        foreignField: '_id',
+        as: 'minfo'
+       }}, {$unwind: {
+        path: '$minfo'
+       }}, {$project: {
+        _id: 0,
+        pid: '$_id',
+        mid: '$minfo._id',
+        name: 1,
+        ptitle: '$minfo.ptitle',
+        role: 'Producer'
+       }}]
+
+}

@@ -1,0 +1,2 @@
+accessionno -> isbn
+isbn -> author, publisher, title

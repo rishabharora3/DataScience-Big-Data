@@ -1,0 +1,7 @@
+CREATE VIEW S2_Movie AS
+SELECT m.id AS id, ptitle, year, totalvotes
+FROM Movie as m JOIN MovieGenre AS mg
+ON m.id = mg.mid JOIN Genre AS g
+ON mg.gid = g.id
+WHERE g.name = 'Action' AND year BETWEEN 1990 AND 1999
+AND runtime > 70

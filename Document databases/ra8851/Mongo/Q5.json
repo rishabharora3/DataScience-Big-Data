@@ -1,0 +1,21 @@
+{initialCollection:'Movies', pipeline:[{$match: {
+ genres: 'Sci-Fi'
+}}, {$lookup: {
+ from: 'MoviesDenorm',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'movieDirectors'
+}}, {$unwind: {
+ path: '$movieDirectors'
+}}, {$unwind: {
+ path: '$movieDirectors.directors'
+}}, {$group: {
+ _id: '$_id',
+ directorCount: {
+  $sum: 1
+ }
+}}, {$match: {
+ directorCount: {
+  $gt: 3
+ }
+}}]}

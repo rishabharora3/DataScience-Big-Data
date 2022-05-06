@@ -1,0 +1,15 @@
+CREATE VIEW S2_Producer AS
+SELECT p.id AS id, mid, name, byear
+FROM Person as p JOIN Producer AS pro 
+ON p.id = pro.pid
+WHERE mid IN
+(
+SELECT m.id
+FROM Movie as m JOIN MovieGenre AS mg
+ON m.id = mg.mid JOIN Genre AS g
+ON mg.gid = g.id
+WHERE g.name = 'Action' AND year BETWEEN 1990 AND 1999
+AND runtime > 70
+)
+
+

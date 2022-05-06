@@ -1,0 +1,32 @@
+{initialCollection:'@@Relation@@', pipeline:[{$group: {
+ _id: '$attribute',
+ freq: {
+  $sum: 1
+ }
+}}, {$group: {
+ _id: null,
+ max_freq: {
+  $max: '$freq'
+ },
+ all_values: {
+  $push: {
+   attribute: '$_id',
+   freq: '$freq'
+  }
+ }
+}}, {$unwind: {
+ path: '$all_values'
+}}, {$project: {
+ cmp: {
+  $eq: [
+   '$max_freq',
+   '$all_values.freq'
+  ]
+ },
+ all_values: 1
+}}, {$match: {
+ cmp: true
+}}, {$project: {
+ _id: 0,
+ attribute: '$all_values.attribute'
+}}]}

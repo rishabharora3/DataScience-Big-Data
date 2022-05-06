@@ -1,0 +1,40 @@
+{viewName:'Person_G', initialCollection:'S1_Director', pipeline:
+
+    [{$project: {
+        name: 1,
+        alive: {
+            $eq: [
+                '$dyear',
+                null
+               ]
+        }
+       }}, {$unionWith: {
+        coll: 'S2_Producer',
+        pipeline: [
+         {
+          $project: {
+           name: 1
+          }
+         }
+        ]
+       }}, {$unionWith: {
+        coll: 'S3_Writer',
+        pipeline: [
+         {
+          $project: {
+           name: 1
+          }
+         }
+        ]
+       }}, {$group: {
+        _id: '$_id',
+        name: {
+         $max: '$name'
+        },
+        alive: {
+         $max: '$alive'
+        }
+       }}]
+
+
+}

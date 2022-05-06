@@ -1,0 +1,3 @@
+r(building, course, room, section, semester, year)
+r(course, credits, department, title)
+r(building, capacity, room)

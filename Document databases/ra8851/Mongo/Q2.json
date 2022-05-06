@@ -1,0 +1,40 @@
+{initialCollection:'Movies', pipeline:[{$match: {
+ genres: 'Sci-Fi'
+}}, {$match: {
+ runtime: {
+  $lt: 180
+ }
+}}, {$lookup: {
+ from: 'MoviesDenorm',
+ localField: '_id',
+ foreignField: '_id',
+ as: 'movieDirectors'
+}}, {$unwind: {
+ path: '$movieDirectors'
+}}, {$unwind: {
+ path: '$movieDirectors.directors'
+}}, {$lookup: {
+ from: 'People',
+ localField: 'movieDirectors.directors',
+ foreignField: '_id',
+ as: 'directorName'
+}}, {$unwind: {
+ path: '$directorName'
+}}, {$match: {
+ 'directorName.name': {
+  $regex: RegExp('^Kat.*')
+ }
+}}, {$unwind: {
+ path: '$movieDirectors.writers'
+}}, {$group: {
+ _id: '$_id',
+ writerCount: {
+  $sum: 1
+ }
+}}, {$match: {
+ writerCount: {
+  $gt: 1
+ }
+}}, {$project: {
+ _id: 1
+}}]}

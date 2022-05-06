@@ -1,0 +1,26 @@
+{viewName:'S2_Movie', initialCollection:'Movies', pipeline:
+    [{$match: {
+        genres: 'Action',
+        $and: [
+         {
+          year: {
+           $gte: 1990
+          }
+         },
+         {
+          year: {
+           $lte: 1999
+          }
+         }
+        ],
+        runtime: {
+         $gt: 70
+        }
+       }}, {$project: {
+        _id: 1,
+        ptitle: 1,
+        year: 1,
+        totalvotes: 1
+       }}]
+
+}

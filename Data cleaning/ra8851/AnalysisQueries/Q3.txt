@@ -1,0 +1,7 @@
+SELECT AVG(m.rating) as rating, m.year as year FROM movie AS m 
+JOIN moviegenre AS mg 
+ON m.id = mg.mid
+JOIN genre AS g
+ON mg.gid = g.id
+WHERE g.name = "@@Genre@@" AND m.totalvotes > @@TotalVotes@@
+GROUP BY year
